@@ -37,8 +37,6 @@ public class SkillEmployeeDTO {
         this.employeeName = employeeName;
     }
 
-//
-
     private String skillName;
     private Integer employeeId;
     private String employeeName;
