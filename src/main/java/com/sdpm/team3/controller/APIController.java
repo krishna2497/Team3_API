@@ -1,10 +1,6 @@
 package com.sdpm.team3.controller;
 
-import com.sdpm.team3.model.ProgressNotes;
-import com.sdpm.team3.model.Services;
-import com.sdpm.team3.model.Skills;
-import com.sdpm.team3.model.Vendor;
-import com.sdpm.team3.model.Booking;
+import com.sdpm.team3.model.*;
 import com.sdpm.team3.repository.*;
 import com.sdpm.team3.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +27,18 @@ public class APIController {
 
     private final BookingService bookingService;
 
+    private  final EmployeeSkillsRepository employeeSkillsRepository;
+
+    private  final ServiceEmployeeRepository serviceEmployeeRepository;
+
+
+
 
 
 
     // Constructor injection is recommended for mandatory dependencies
     @Autowired
-    public APIController(VendorRepository vendorRepository, SkillRepository skillRepository, ServicesRepository servicesRepository, BookingRepository bookingRepository, ProgressNotesRepository progressNotesRepository, BookingService bookingService) {
+    public APIController(VendorRepository vendorRepository, SkillRepository skillRepository, ServicesRepository servicesRepository, BookingRepository bookingRepository, ProgressNotesRepository progressNotesRepository, BookingService bookingService, EmployeeSkillsRepository employeeSkillsRepository1, ServiceEmployeeRepository serviceEmployeeRepository) {
         this.vendorRepository = vendorRepository;
 
         this.skillRepository = skillRepository;
@@ -45,6 +47,8 @@ public class APIController {
         this.bookingRepository = bookingRepository;
         this.progressNotesRepository = progressNotesRepository;
         this.bookingService = bookingService;
+        this.employeeSkillsRepository = employeeSkillsRepository1;
+        this.serviceEmployeeRepository = serviceEmployeeRepository;
     }
 
 
@@ -73,14 +77,9 @@ public class APIController {
     }
 
 
-    @PostMapping("/services")
-    public ResponseEntity<Services> addService(@RequestBody Services service) {
-        // Save the received service object using the repository
-        Services savedService = servicesRepository.save(service);
 
-        // Return the saved service object with a 201 (Created) status
-        return new ResponseEntity<>(savedService, HttpStatus.CREATED);
-    }
+
+
 
 
 
@@ -107,17 +106,66 @@ public class APIController {
     }
 
 
-    @GetMapping("/booking/{bookingId}")// (internal api)
-    public ResponseEntity<List<ProgressNotes>> getProgressNotesByBookingId(@PathVariable Integer bookingId) {
-        List<ProgressNotes> progressNotes = progressNotesRepository.findByBookingId(bookingId);
-        return ResponseEntity.ok(progressNotes);
+//    @GetMapping("/booking/{bookingId}")// (internal api)
+//    public ResponseEntity<List<ProgressNotes>> getProgressNotesByBookingId(@PathVariable Integer bookingId) {
+//        List<ProgressNotes> progressNotes = progressNotesRepository.findByBookingId(bookingId);
+//        return ResponseEntity.ok(progressNotes);
+//    }
+
+
+
+    @PostMapping("/bookings/add")
+    public ResponseEntity<Booking> addBooking(@RequestBody Booking booking) {
+        Booking savedBooking = bookingRepository.save(booking);
+        return new ResponseEntity<>(savedBooking, HttpStatus.CREATED);
     }
 
+
+    @PostMapping("/employee_skills/add")
+    public ResponseEntity<EmployeeSkills> addEmployeeSkill(@RequestBody EmployeeSkills employeeSkills) {
+        EmployeeSkills savedEmployeeSkill = employeeSkillsRepository.save(employeeSkills);
+        return new ResponseEntity<>(savedEmployeeSkill, HttpStatus.CREATED);
+    }
     @PostMapping("/progress_notes/add")
     public ResponseEntity<ProgressNotes> addProgressNote(@RequestBody ProgressNotes progressNotes) {
         ProgressNotes savedProgressNote = progressNotesRepository.save(progressNotes);
         return new ResponseEntity<>(savedProgressNote, HttpStatus.CREATED);
     }
+
+
+
+    @PostMapping("/service_employees/add")
+    public ResponseEntity<ServiceEmployee> addServiceEmployee(@RequestBody ServiceEmployee serviceEmployee) {
+        ServiceEmployee savedServiceEmployee = serviceEmployeeRepository.save(serviceEmployee);
+        return new ResponseEntity<>(savedServiceEmployee, HttpStatus.CREATED);
+    }
+
+
+    @PostMapping("/services")
+    public ResponseEntity<Services> addService(@RequestBody Services service) {
+        // Save the received service object using the repository
+        Services savedService = servicesRepository.save(service);
+
+        // Return the saved service object with a 201 (Created) status
+        return new ResponseEntity<>(savedService, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/skills/add")
+    public ResponseEntity<Skills> addSkill(@RequestBody Skills skill) {
+        Skills savedSkill = skillRepository.save(skill);
+        return new ResponseEntity<>(savedSkill, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/vendors/add")
+    public ResponseEntity<Vendor> addVendor(@RequestBody Vendor vendor) {
+        Vendor savedVendor = vendorRepository.save(vendor);
+        return new ResponseEntity<>(savedVendor, HttpStatus.CREATED);
+    }
+
+
+
+
+
 
 
 
