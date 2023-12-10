@@ -113,6 +113,13 @@ public class APIController {
 //    }
 
 
+    @GetMapping("/bookings/all")
+    public ResponseEntity<List<Booking>> getAllBookings() {
+        List<Booking> bookings = bookingRepository.findAll(); // Assuming you have a booking repository
+        return ResponseEntity.ok(bookings);
+    }
+
+
 
     @PostMapping("/bookings/add")
     public ResponseEntity<Booking> addBooking(@RequestBody Booking booking) {
