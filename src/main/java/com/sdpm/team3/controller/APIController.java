@@ -12,78 +12,67 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api") // Base path for all endpoints in this controller
+@RequestMapping("/api")
 public class APIController {
 
     private final VendorRepository vendorRepository;
-
-
-
     private final SkillRepository skillRepository;
-
-    private  final ServicesRepository servicesRepository;
+    private final ServicesRepository servicesRepository;
     private final BookingRepository bookingRepository;
     private final ProgressNotesRepository progressNotesRepository;
-
     private final BookingService bookingService;
+    private final EmployeeSkillsRepository employeeSkillsRepository;
+    private final ServiceEmployeeRepository serviceEmployeeRepository;
 
-    private  final EmployeeSkillsRepository employeeSkillsRepository;
-
-    private  final ServiceEmployeeRepository serviceEmployeeRepository;
-
-
-
-
-
-
-    // Constructor injection is recommended for mandatory dependencies
     @Autowired
-    public APIController(VendorRepository vendorRepository, SkillRepository skillRepository, ServicesRepository servicesRepository, BookingRepository bookingRepository, ProgressNotesRepository progressNotesRepository, BookingService bookingService, EmployeeSkillsRepository employeeSkillsRepository1, ServiceEmployeeRepository serviceEmployeeRepository) {
+    public APIController(VendorRepository vendorRepository, SkillRepository skillRepository, ServicesRepository servicesRepository, BookingRepository bookingRepository, ProgressNotesRepository progressNotesRepository, BookingService bookingService, EmployeeSkillsRepository employeeSkillsRepository, ServiceEmployeeRepository serviceEmployeeRepository) {
         this.vendorRepository = vendorRepository;
-
         this.skillRepository = skillRepository;
-
         this.servicesRepository = servicesRepository;
         this.bookingRepository = bookingRepository;
         this.progressNotesRepository = progressNotesRepository;
         this.bookingService = bookingService;
-        this.employeeSkillsRepository = employeeSkillsRepository1;
+        this.employeeSkillsRepository = employeeSkillsRepository;
         this.serviceEmployeeRepository = serviceEmployeeRepository;
     }
 
-
-    // Get a vendor by ID (test )
-    @GetMapping("/vendors/{id}")
-    public ResponseEntity<Vendor> getVendorById(@PathVariable int id) {
-        return vendorRepository.findById(id)
-                .map(ResponseEntity::ok) // If the vendor is found, return 200 OK with the vendor
-                .orElseGet(() -> ResponseEntity.notFound().build()); // If not found, return 404 Not Found
+    @GetMapping("/vendors")
+    public ResponseEntity<List<Vendor>> getAllVendors() {
+        List<Vendor> vendors = vendorRepository.findAll();
+        return ResponseEntity.ok(vendors);
     }
 
-
-    @GetMapping("/skills/{id}") //(test )
-    public ResponseEntity<Skills> getSkillById(@PathVariable int id) {
-        return skillRepository.findById(id)
-                .map(ResponseEntity::ok) // If the skill is found, return 200 OK with the skill
-                .orElseGet(() -> ResponseEntity.notFound().build()); // If not found, return 404 Not Found
+    @GetMapping("/skills")
+    public ResponseEntity<List<Skills>> getAllSkills() {
+        List<Skills> skills = skillRepository.findAll();
+        return ResponseEntity.ok(skills);
     }
 
-
-//API for team 2
-   @GetMapping("/servicesOffered")  // (exposed api also sued as internal api )
+    @GetMapping("/services")
     public ResponseEntity<List<Services>> getAllServices() {
         List<Services> services = servicesRepository.findAll();
-        return ResponseEntity.ok(services); // Return the list of services
+        return ResponseEntity.ok(services);
     }
 
+    @GetMapping("/bookings")
+    public ResponseEntity<List<Booking>> getAllBookings() {
+        List<Booking> bookings = bookingRepository.findAll();
+        return ResponseEntity.ok(bookings);
+    }
 
+    @GetMapping("/employee_skills")
+    public ResponseEntity<List<EmployeeSkills>> getAllEmployeeSkills() {
+        List<EmployeeSkills> employeeSkills = employeeSkillsRepository.findAll();
+        return ResponseEntity.ok(employeeSkills);
+    }
 
+    @GetMapping("/service_employees")
+    public ResponseEntity<List<ServiceEmployee>> getAllServiceEmployees() {
+        List<ServiceEmployee> serviceEmployees = serviceEmployeeRepository.findAll();
+        return ResponseEntity.ok(serviceEmployees);
+    }
 
-
-
-
-
-    @GetMapping("/progress-notes/patient/{patientId}")//(exposed api)
+    @GetMapping("/progress-notes/patient/{patientId}")
     public ResponseEntity<List<ProgressNotes>> getProgressNotesByPatientId(@PathVariable Integer patientId) {
         List<Integer> bookingIds = bookingRepository.findByPatientId(patientId)
                 .stream()
@@ -98,21 +87,11 @@ public class APIController {
         return ResponseEntity.ok(progressNotes);
     }
 
-
-    @GetMapping("/booking/details") //(Internal APi)
+    @GetMapping("/booking/details")
     public ResponseEntity<List<BookingDetailsWithCount>> getBookingDetailsWithCounts() {
         List<BookingDetailsWithCount> bookingDetailsWithCounts = bookingService.getBookingDetailsWithCounts();
         return ResponseEntity.ok(bookingDetailsWithCounts);
     }
-
-
-//    @GetMapping("/booking/{bookingId}")// (internal api)
-//    public ResponseEntity<List<ProgressNotes>> getProgressNotesByBookingId(@PathVariable Integer bookingId) {
-//        List<ProgressNotes> progressNotes = progressNotesRepository.findByBookingId(bookingId);
-//        return ResponseEntity.ok(progressNotes);
-//    }
-
-
 
     @PostMapping("/bookings/add")
     public ResponseEntity<Booking> addBooking(@RequestBody Booking booking) {
@@ -120,19 +99,17 @@ public class APIController {
         return new ResponseEntity<>(savedBooking, HttpStatus.CREATED);
     }
 
-
     @PostMapping("/employee_skills/add")
     public ResponseEntity<EmployeeSkills> addEmployeeSkill(@RequestBody EmployeeSkills employeeSkills) {
         EmployeeSkills savedEmployeeSkill = employeeSkillsRepository.save(employeeSkills);
         return new ResponseEntity<>(savedEmployeeSkill, HttpStatus.CREATED);
     }
+
     @PostMapping("/progress_notes/add")
     public ResponseEntity<ProgressNotes> addProgressNote(@RequestBody ProgressNotes progressNotes) {
         ProgressNotes savedProgressNote = progressNotesRepository.save(progressNotes);
         return new ResponseEntity<>(savedProgressNote, HttpStatus.CREATED);
     }
-
-
 
     @PostMapping("/service_employees/add")
     public ResponseEntity<ServiceEmployee> addServiceEmployee(@RequestBody ServiceEmployee serviceEmployee) {
@@ -140,13 +117,9 @@ public class APIController {
         return new ResponseEntity<>(savedServiceEmployee, HttpStatus.CREATED);
     }
 
-
     @PostMapping("/services")
     public ResponseEntity<Services> addService(@RequestBody Services service) {
-        // Save the received service object using the repository
         Services savedService = servicesRepository.save(service);
-
-        // Return the saved service object with a 201 (Created) status
         return new ResponseEntity<>(savedService, HttpStatus.CREATED);
     }
 
@@ -162,12 +135,10 @@ public class APIController {
         return new ResponseEntity<>(savedVendor, HttpStatus.CREATED);
     }
 
-
-
-
-
-
-
-
+    //    @GetMapping("/booking/{bookingId}")// (internal api)
+//    public ResponseEntity<List<ProgressNotes>> getProgressNotesByBookingId(@PathVariable Integer bookingId) {
+//        List<ProgressNotes> progressNotes = progressNotesRepository.findByBookingId(bookingId);
+//        return ResponseEntity.ok(progressNotes);
+//    }
 
 }
