@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -118,6 +119,38 @@ public class APIController {
         List<Booking> bookings = bookingRepository.findAll(); // Assuming you have a booking repository
         return ResponseEntity.ok(bookings);
     }
+
+
+
+    @PutMapping("/bookings/edit/{id}")
+    public ResponseEntity<Booking> updateBooking(@PathVariable Integer id, @RequestBody Booking updatedBooking) {
+        // Check if the booking with the given ID exists in the database
+        Optional<Booking> existingBookingOptional = bookingRepository.findById(id);
+
+        if (existingBookingOptional.isPresent()) {
+            // The booking exists, so we can update it
+            Booking existingBooking = existingBookingOptional.get();
+
+            // Update the fields of the existing booking with the values from the updatedBooking object
+            // You can add validation and logic here to ensure that only valid updates are performed
+            existingBooking.setServiceId(updatedBooking.getServiceId());
+            existingBooking.setEmployeeId(updatedBooking.getEmployeeId());
+            existingBooking.setStartTime(updatedBooking.getStartTime());
+            existingBooking.setEndTime(updatedBooking.getEndTime());
+            existingBooking.setPatientId(updatedBooking.getPatientId());
+            existingBooking.setStatus(updatedBooking.getStatus());
+            existingBooking.setRemarks(updatedBooking.getRemarks());
+
+            // Save the updated booking to the database
+            Booking updated = bookingRepository.save(existingBooking);
+
+            return ResponseEntity.ok(updated);
+        } else {
+            // The booking with the given ID was not found
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
 
 
