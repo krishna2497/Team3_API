@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface ServiceEmployeeRepository extends JpaRepository<ServiceEmployee, Integer> {
     // You can define custom queries here if needed, for example:
-    List<ServiceEmployee> findByEmployeeIdIn(List<Integer> employeeIds);
+    List<ServiceEmployee> findByIdIn(List<Integer> employeeIds);
 }

@@ -230,7 +230,7 @@ public class APIController {
                 .collect(Collectors.toList());
 
         // Use the list of employee IDs to get the details of each ServiceEmployee
-        List<ServiceEmployee> serviceEmployees = serviceEmployeeRepository.findByEmployeeIdIn(employeeIds);
+        List<ServiceEmployee> serviceEmployees = serviceEmployeeRepository.findByIdIn(employeeIds);
 
         return ResponseEntity.ok(serviceEmployees); // Return the list of service employees
     }
