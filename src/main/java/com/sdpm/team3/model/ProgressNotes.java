@@ -15,17 +15,17 @@ public class ProgressNotes {
     @Column(name = "booking_id")
     private Integer bookingId;
 
-    @Column(name = "question_1")
-    private String question1;
+    @Column(name = "overall_session_quality")
+    private String overallSessionQuality;
 
-    @Column(name = "question_2")
-    private String question2;
+    @Column(name = "service_provider_performance")
+    private String serviceProviderPerformance;
 
-    @Column(name = "question_3")
-    private String question3;
+    @Column(name = "meeting_elderly_needs")
+    private String meetingElderlyNeeds;
 
-    @Column(name = "question_4")
-    private String question4;
+    @Column(name = "communication_responsiveness")
+    private String communicationResponsiveness;
     public Integer getId() {
         return id;
     }
@@ -50,36 +50,36 @@ public class ProgressNotes {
         this.bookingId = bookingId;
     }
 
-    public String getQuestion1() {
-        return question1;
+    public String getOverallSessionQuality() {
+        return overallSessionQuality;
     }
 
-    public void setQuestion1(String question1) {
-        this.question1 = question1;
+    public void setOverallSessionQuality(String overallSessionQuality) {
+        this.overallSessionQuality = overallSessionQuality;
     }
 
-    public String getQuestion2() {
-        return question2;
+    public String getServiceProviderPerformance() {
+        return serviceProviderPerformance;
     }
 
-    public void setQuestion2(String question2) {
-        this.question2 = question2;
+    public void setServiceProviderPerformance(String serviceProviderPerformance) {
+        this.serviceProviderPerformance = serviceProviderPerformance;
     }
 
-    public String getQuestion3() {
-        return question3;
+    public String getMeetingElderlyNeeds() {
+        return meetingElderlyNeeds;
     }
 
-    public void setQuestion3(String question3) {
-        this.question3 = question3;
+    public void setMeetingElderlyNeeds(String meetingElderlyNeeds) {
+        this.meetingElderlyNeeds = meetingElderlyNeeds;
     }
 
-    public String getQuestion4() {
-        return question4;
+    public String getCommunicationResponsiveness() {
+        return communicationResponsiveness;
     }
 
-    public void setQuestion4(String question4) {
-        this.question4 = question4;
+    public void setCommunicationResponsiveness(String communicationResponsiveness) {
+        this.communicationResponsiveness = communicationResponsiveness;
     }
 
 
