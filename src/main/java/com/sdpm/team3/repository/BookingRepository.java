@@ -10,7 +10,7 @@ public interface BookingRepository  extends JpaRepository<Booking, Integer> {
     List<Booking> findByPatientId(Integer patientId);
 
 
-    @Query("SELECT b.serviceId, b.patientId, COUNT(b.bookingId) FROM Booking b GROUP BY b.serviceId, b.patientId")
+    @Query("SELECT b.serviceId, b.patientId, COUNT(b.bookingId) FROM Booking  b GROUP BY b.serviceId, b.patientId")
     List<Object[]> findBookingCountsGroupedByServiceAndPatient();
 
     List<Booking> findByServiceIdAndPatientId(Integer serviceId, Integer patientId);

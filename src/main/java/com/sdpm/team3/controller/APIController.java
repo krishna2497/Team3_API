@@ -84,19 +84,32 @@ public class APIController {
 
 
 
-    @GetMapping("/progress-notes/patient/{patientId}")//(exposed api)
-    public ResponseEntity<List<ProgressNotes>> getProgressNotesByPatientId(@PathVariable Integer patientId) {
-        List<Integer> bookingIds = bookingRepository.findByPatientId(patientId)
-                .stream()
-                .map(Booking::getBookingId)
-                .collect(Collectors.toList());
+//    @GetMapping("/progress-notes/patient/{patientId}")//(exposed api)
+//    public ResponseEntity<List<ProgressNotes>> getProgressNotesByPatientId(@PathVariable Integer patientId) {
+//        List<Integer> bookingIds = bookingRepository.findByPatientId(patientId)
+//                .stream()
+//                .map(Booking::getBookingId)
+//                .collect(Collectors.toList());
+//
+//        if (bookingIds.isEmpty()) {
+//            return ResponseEntity.notFound().build();
+//        }
+//
+//        List<ProgressNotes> progressNotes = progressNotesRepository.findByBookingIdIn(bookingIds);
+//        return ResponseEntity.ok(progressNotes);
+//    }
 
-        if (bookingIds.isEmpty()) {
+
+    @GetMapping("/progress-notes/booking/{bookingId}") // Endpoint to get progress notes by bookingId
+    public ResponseEntity<List<ProgressNotes>> getProgressNotesByBookingId(@PathVariable Integer bookingId) {
+        List<ProgressNotes> progressNotes = progressNotesRepository.findByBookingId(bookingId); // Fetch progress notes for the bookingId
+        if (progressNotes.isEmpty()) {
+            // If there are no progress notes for the given bookingId, return 404 Not Found
             return ResponseEntity.notFound().build();
+        } else {
+            // If progress notes are found, return 200 OK with the progress notes
+            return ResponseEntity.ok(progressNotes);
         }
-
-        List<ProgressNotes> progressNotes = progressNotesRepository.findByBookingIdIn(bookingIds);
-        return ResponseEntity.ok(progressNotes);
     }
 
 
