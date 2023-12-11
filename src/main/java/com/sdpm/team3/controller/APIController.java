@@ -214,6 +214,26 @@ public class APIController {
         Vendor savedVendor = vendorRepository.save(vendor);
         return new ResponseEntity<>(savedVendor, HttpStatus.CREATED);
     }
+    @GetMapping("/service-employees/skill/{skillId}") // Endpoint to get service employees by skill ID
+    public ResponseEntity<List<ServiceEmployee>> getServiceEmployeesBySkill(@PathVariable Integer skillId) {
+        // Find all EmployeeSkills entries with the given skill ID
+        List<EmployeeSkills> employeeSkillsList = employeeSkillsRepository.findBySkillId(skillId);
+
+        if (employeeSkillsList.isEmpty()) {
+            // If there are no employee skills found, return 404 Not Found
+            return ResponseEntity.notFound().build();
+        }
+
+        // Extract the list of employee IDs from the EmployeeSkills entries
+        List<Integer> employeeIds = employeeSkillsList.stream()
+                .map(EmployeeSkills::getEmployeeId)
+                .collect(Collectors.toList());
+
+        // Use the list of employee IDs to get the details of each ServiceEmployee
+        List<ServiceEmployee> serviceEmployees = serviceEmployeeRepository.findByEmployeeIdIn(employeeIds);
+
+        return ResponseEntity.ok(serviceEmployees); // Return the list of service employees
+    }
 
 
 
