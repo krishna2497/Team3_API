@@ -236,37 +236,6 @@ public class APIController {
     }
 
 
-    @GetMapping("/service-employees/service/{serviceId}") // Endpoint to get service employees by service ID
-    public ResponseEntity<List<ServiceEmployee>> getServiceEmployeesByServiceId(@PathVariable String serviceId) {
-        // Find the service by its ID to get the skill ID
-        Optional<Services> service = servicesRepository.findById(Integer.valueOf(serviceId));
-
-        if (!service.isPresent()) {
-            // If the service is not found, return 404 Not Found
-            return ResponseEntity.notFound().build();
-        }
-
-        // Get the skill ID from the service
-        String skillId = service.get().getSkillId();
-
-        // Find all EmployeeSkills entries with the given skill ID
-        List<EmployeeSkills> employeeSkillsList = employeeSkillsRepository.findBySkillId(Integer.valueOf(skillId));
-
-        if (employeeSkillsList.isEmpty()) {
-            // If there are no employee skills found, return 404 Not Found
-            return ResponseEntity.notFound().build();
-        }
-
-        // Extract the list of employee IDs from the EmployeeSkills entries
-        List<Integer> employeeIds = employeeSkillsList.stream()
-                .map(EmployeeSkills::getEmployeeId)
-                .collect(Collectors.toList());
-
-        // Use the list of employee IDs to get the details of each ServiceEmployee
-        List<ServiceEmployee> serviceEmployees = serviceEmployeeRepository.findByIdIn(employeeIds);
-
-        return ResponseEntity.ok(serviceEmployees); // Return the list of service employees
-    }
 
 
 
